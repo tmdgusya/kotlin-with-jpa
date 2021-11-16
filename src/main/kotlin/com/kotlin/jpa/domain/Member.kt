@@ -1,5 +1,7 @@
 package com.kotlin.jpa.domain
 
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
@@ -15,10 +17,10 @@ class Member(
 
     var name: String = name;
 
-    @CreatedDate
+    @CreationTimestamp
     lateinit var createdAt: LocalDateTime
 
-    @LastModifiedDate
+    @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
     @ManyToOne
