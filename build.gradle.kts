@@ -34,7 +34,7 @@ allOpen {
 }
 
 noArg {
-	annotation("com.my.Annotation")
+	annotation("org.springframework.stereotype.Repository")
 }
 
 tasks.withType<KotlinCompile> {
