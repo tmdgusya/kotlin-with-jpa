@@ -35,4 +35,21 @@ internal class MemberServiceTest {
         assertNotNull(roach.createdAt);
         assertNotNull(roach.updatedAt);
     }
+
+    @Test
+    @DisplayName("변경 감지 기능을 통해 Member 의 이름이 Update 되는지 확인합니다.")
+    fun updateMemberName() {
+        //given
+        val testMemberName = "Roach";
+        val changedMemberName = "Dodo";
+        memberService.addMember(Member(testMemberName));
+        val roach: Member = memberRepository.findMemberByName(testMemberName).orElseThrow();
+
+        //when
+        memberService.updateMemberInfo(roach, changedMemberName);
+
+        //then
+        assertEquals(changedMemberName, roach.name);
+    }
+
 }

@@ -15,4 +15,9 @@ class MemberService(
         memberRepository.save(member);
     }
 
+    fun updateMemberInfo(member: Member, changedMemberName: String) {
+        member.name = changedMemberName;
+        memberRepository.save(member);
+    }
+
 }
