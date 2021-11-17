@@ -7,8 +7,14 @@ import javax.persistence.*
 
 @Entity
 class Member(
-        name: String
+        name: String,
     ) {
+
+    constructor(name: String, team: Team) : this(name) {
+        this.name = name;
+        this.team = team;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null;

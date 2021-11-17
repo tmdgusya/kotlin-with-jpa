@@ -1,7 +1,9 @@
 package com.kotlin.jpa.service
 
 import com.kotlin.jpa.domain.Member
+import com.kotlin.jpa.domain.Team
 import com.kotlin.jpa.repository.MemberRepository
+import com.kotlin.jpa.repository.TeamRepository
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -19,6 +21,9 @@ internal class MemberServiceTest {
 
     @Autowired
     private lateinit var memberRepository: MemberRepository;
+
+    @Autowired
+    private lateinit var teamRepository: TeamRepository;
 
     @Test
     @DisplayName("멤버가 생성될때 CreateAt 과 UpdatedAt 및 입력한 값들이 정확히 들어가는지 확인합니다.")
@@ -50,6 +55,24 @@ internal class MemberServiceTest {
 
         //then
         assertEquals(changedMemberName, roach.name);
+    }
+
+    @Test
+    @DisplayName("Team 설정을 통해 Member 의 Team 의 외래키가 잘 저장되는지 확인한다.")
+    fun setRelationTeamAndMembers() {
+        //given
+        val testMemberName = "Roach";
+        val teamName= "Blue"
+        val team = Team(teamName);
+        teamRepository.save(team);
+        memberService.addMember(Member(testMemberName, team));
+        val roach: Member = memberRepository.findMemberByName(testMemberName).orElseThrow();
+
+        //when
+        val roachTeam = roach.team;
+
+        //then
+        assertEquals(teamName, roachTeam?.name);
     }
 
 }
