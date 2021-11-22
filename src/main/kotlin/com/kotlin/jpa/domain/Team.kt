@@ -12,6 +12,10 @@ class Team(
 
     var name: String = name;
 
-    @OneToMany(mappedBy = "team")
-    val members: List<Member> = ArrayList<Member>()
+    @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    val members: MutableList<Member> = ArrayList<Member>()
+
+    fun addMember(member: Member) {
+        members.add(member);
+    }
 }

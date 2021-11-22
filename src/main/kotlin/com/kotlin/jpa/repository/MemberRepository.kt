@@ -8,6 +8,6 @@ import java.util.*
 @Repository
 interface MemberRepository : JpaRepository<Member, Long> {
 
-    fun findMemberByName(name: String): Optional<Member>
+    fun findMemberByName(name: String): Member?
 
 }
