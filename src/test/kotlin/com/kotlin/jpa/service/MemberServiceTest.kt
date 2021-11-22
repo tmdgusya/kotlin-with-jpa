@@ -4,6 +4,7 @@ import com.kotlin.jpa.domain.Member
 import com.kotlin.jpa.domain.Team
 import com.kotlin.jpa.repository.MemberRepository
 import com.kotlin.jpa.repository.TeamRepository
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -33,7 +34,7 @@ internal class MemberServiceTest {
     @PersistenceContext
     private lateinit var entityManager: EntityManager;
 
-    @BeforeEach
+    @AfterEach
     fun setUp() {
         memberRepository.deleteAll();
         teamRepository.deleteAll();
@@ -171,6 +172,33 @@ internal class MemberServiceTest {
             ?: throw IllegalArgumentException("잘못된 이름입니다.");
         assertNotNull(findMemberByName);
         assertEquals(savedTeam.id, findMemberByName.team?.id ?: -1)
+    }
+
+    @Test
+    @DisplayName("Team 을 저장할때 Member 또한 영속화되서 같이 저장되는지 확인합니다.")
+    fun replicateBothParentAndChild() {
+        //given
+        val testMemberName = "Roach";
+        val teamName = "BlueTeam"
+        var member: Member = Member(testMemberName);
+        val team: Team = Team(teamName);
+        val changeName = "DODO";
+
+        //when
+        team.addMember(member);
+        member.team = team
+        val savedTeam = teamRepository.save(team);
+
+        savedTeam.members[0].name = changeName
+        teamRepository.save(team);
+
+        //then
+        val findMemberByName = memberRepository
+            .findMemberByName(changeName)
+            ?: throw IllegalArgumentException("잘못된 이름입니다.");
+        assertNotNull(findMemberByName);
+        assertEquals(savedTeam.id, findMemberByName.team?.id ?: -1)
+        assertEquals(changeName, findMemberByName.name)
     }
 
 }
